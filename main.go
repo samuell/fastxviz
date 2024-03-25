@@ -22,7 +22,7 @@ func main() {
 	flag.Parse()
 
 	if *inPath == "" || *plotType == "" {
-		fmt.Println("You have to specify an input filename!\n")
+		fmt.Println("You have to specify an input filename!")
 		flag.Usage()
 		os.Exit(1)
 	}
