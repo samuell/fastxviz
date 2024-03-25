@@ -16,24 +16,22 @@ import (
 )
 
 func main() {
-	inpath := flag.String("input", "", "Input file in fastq format")
-	plotpath := flag.String("plot", "", "Output plot file in .pdf or .png format (depending on file extension). If not specified, it will be the input path, with .png appended.")
+	inPath := flag.String("in", "", "Input file in FastQ format")
+	plotType := flag.String("type", "png", "Decide plot type, between: png, pdf and cli")
+	plotPath := flag.String("out", "", "Output plot file in .pdf or .png format (depending on file extension). If not specified, it will be the input path, with .png appended.")
 	flag.Parse()
-	if *inpath == "" {
+
+	if *inPath == "" || *plotType == "" {
 		fmt.Println("You have to specify an input filename!\n")
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	if *plotpath == "" {
-		*plotpath = *inpath + ".png"
-	}
-
-	file, err := os.Open(*inpath)
+	file, err := os.Open(*inPath)
 	checkMsg(err, "Could not open file")
 
 	var scanner *bufio.Scanner
-	if strings.HasSuffix(*inpath, ".gz") {
+	if strings.HasSuffix(*inPath, ".gz") {
 		ungzipper, err := gzip.NewReader(file)
 		checkMsg(err, "Could not create GZip reader")
 		scanner = bufio.NewScanner(ungzipper)
@@ -56,16 +54,22 @@ func main() {
 	fmt.Println("Sorting lengths ...")
 	sort.Ints(lengths)
 
-	//for i, length := range lengths {
-	//	lenStr := ""
-	//	for l := 0; l < length; l++ {
-	//		lenStr = lenStr + "*"
-	//	}
-	//	fmt.Printf("Length %7d: %s\n", i, lenStr)
-	//}
+	if *plotType == "cli" {
+		for i, length := range lengths {
+			lenStr := ""
+			for l := 0; l < length; l++ {
+				lenStr = lenStr + "*"
+			}
+			fmt.Printf("Read %7d [Length: %5d]: %s\n", i, length, lenStr)
+		}
+	} else {
+		if *plotPath == "" {
+			*plotPath = *inPath + "." + *plotType
+		}
 
-	fmt.Println("Plotting ...")
-	plotLengths(lengths, *plotpath)
+		fmt.Println("Plotting ...")
+		plotLengths(lengths, *plotPath)
+	}
 }
 
 func plotLengths(lengths []int, plotPath string) {
