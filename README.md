@@ -1,7 +1,26 @@
 FastXViz
 ========
 
-Plot some metrics about sequences from FastQ and Fasta files.
+Plot read length distribution from FastQ files, in .pdf or .png format.
 
-Initially only supporting plotting the distribution of read/sequence lenghts
-(not as a histogram, but the actual values)
+## Install
+
+Copy the binary corresponding to your operating system from the latest release.
+
+## Example usage
+
+```bash
+./fastxviz -input reads.fq -plot readlengths.png
+```
+
+This will result in a plot like the one below:
+
+## Example plot
+
+![Example plot](exampleplot.png)
+
+
+## Acknowledgements
+
+Hat tip to the [gonum plot package](https://github.com/gonum/plot) which this
+tool relies heavily upon.
