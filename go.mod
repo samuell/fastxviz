@@ -1,3 +1,3 @@
-module github.com/samuell/fastxplot
+module github.com/samuell/fastxviz
 
 go 1.21.0

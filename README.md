@@ -1,5 +1,5 @@
-FastXPlot
-=========
+FastXViz
+========
 
 Plot some metrics about sequences from FastQ and Fasta files.
 
