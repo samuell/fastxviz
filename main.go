@@ -42,6 +42,7 @@ func main() {
 	}
 
 	// Compute length of lines
+	fmt.Println("Computing lengths of reads ...")
 	lengths := []int{}
 	lineNo := 1
 	for scanner.Scan() {
@@ -52,6 +53,7 @@ func main() {
 		lineNo++
 	}
 	checkMsg(scanner.Err(), "Error scanning text")
+	fmt.Println("Sorting lengths ...")
 	sort.Ints(lengths)
 
 	//for i, length := range lengths {
@@ -62,6 +64,7 @@ func main() {
 	//	fmt.Printf("Length %7d: %s\n", i, lenStr)
 	//}
 
+	fmt.Println("Plotting ...")
 	plotLengths(lengths, *plotpath)
 }
 
@@ -72,10 +75,12 @@ func plotLengths(lengths []int, plotPath string) {
 	p.Y.Label.Text = "Length in bases"
 
 	lengthBars := plotter.Values{}
+	fmt.Println("Adding lengths to plot ...")
 	for _, l := range lengths {
 		lengthBars = append(lengthBars, float64(l))
 	}
 
+	fmt.Println("Creating plot ...")
 	w := vg.Points(20)
 	bars, err := plotter.NewBarChart(lengthBars, w)
 	bars.LineStyle.Width = 0
@@ -85,6 +90,7 @@ func plotLengths(lengths []int, plotPath string) {
 
 	p.Add(bars)
 
+	fmt.Println("Saving plot ...")
 	err = p.Save(15*vg.Centimeter, 10*vg.Centimeter, plotPath)
 	checkMsg(err, "Could not save plot")
 }
