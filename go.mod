@@ -1,6 +1,6 @@
 module github.com/samuell/fastxviz
 
-go 1.21.0
+go 1.21
 
 require gonum.org/v1/plot v0.14.0
 
