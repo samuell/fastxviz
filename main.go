@@ -11,9 +11,13 @@ import (
 )
 
 func main() {
-	infile := flag.String("input", "input.fq", "Input file in fastq format")
-
+	infile := flag.String("input", "", "Input file in fastq format")
 	flag.Parse()
+	if *infile == "" {
+		fmt.Println("You have to specify an input filename!\n")
+		flag.Usage()
+		os.Exit(1)
+	}
 
 	file, err := os.Open(*infile)
 	checkMsg(err, "Could not open file")
