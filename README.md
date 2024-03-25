@@ -10,7 +10,7 @@ Copy the binary corresponding to your operating system from the latest release.
 ## Example usage
 
 ```bash
-./fastxviz -input reads.fq -plot readlengths.png
+./fastxviz -in reads.fq -out readlengths.png
 ```
 
 This will result in a plot like the one below:
