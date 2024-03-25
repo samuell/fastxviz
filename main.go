@@ -17,12 +17,16 @@ import (
 
 func main() {
 	inpath := flag.String("input", "", "Input file in fastq format")
-	plotpath := flag.String("plot", "", "Output plot file in .pdf or .png format (depending on file extension)")
+	plotpath := flag.String("plot", "", "Output plot file in .pdf or .png format (depending on file extension). If not specified, it will be the input path, with .png appended.")
 	flag.Parse()
-	if *inpath == "" || *plotpath == "" {
+	if *inpath == "" {
 		fmt.Println("You have to specify an input filename!\n")
 		flag.Usage()
 		os.Exit(1)
+	}
+
+	if *plotpath == "" {
+		*plotpath = *inpath + ".png"
 	}
 
 	file, err := os.Open(*inpath)
