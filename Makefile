@@ -1,5 +1,7 @@
 .PHONY: build
 
+VERSION=v0.0.1
+
 PLATFORMS := linux/amd64 darwin/amd64 darwin/arm64 windows/amd64
 
 temp = $(subst /, ,$@)
@@ -12,11 +14,13 @@ build:
 	go build
 
 build-all-platforms: $(PLATFORMS)
-	mv bin/fastxviz-windows-amd64 bin/fastxviz-windows-amd64.exe
+	mv bin/fastxviz-$(VERSION)-windows-amd64 bin/fastxviz-$(VERSION)-windows-amd64.exe
 
 gzip:
 	gzip bin/*
 
 $(PLATFORMS):
-	GOOS=$(os) GOARCH=$(arch) go build -o bin/$(BINARY_NAME)-$(os)-$(arch) .
+	GOOS=$(os) GOARCH=$(arch) go build -o bin/$(BINARY_NAME)-$(VERSION)-$(os)-$(arch) .
 
+clean:
+	rm -rf bin
