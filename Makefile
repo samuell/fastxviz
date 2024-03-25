@@ -1,6 +1,6 @@
 .PHONY: build
 
-VERSION=v0.0.1
+VERSION=v0.2.0
 
 PLATFORMS := linux/amd64 darwin/amd64 darwin/arm64 windows/amd64
 

@@ -60,7 +60,7 @@ func main() {
 			for l := 0; l < length; l++ {
 				lenStr = lenStr + "*"
 			}
-			fmt.Printf("Read %7d [Length: %5d]: %s\n", i, length, lenStr)
+			fmt.Printf("%7d [%5d] %s\n", i, length, lenStr)
 		}
 	} else {
 		if *plotPath == "" {
