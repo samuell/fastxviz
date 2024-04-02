@@ -98,9 +98,13 @@ func readLengthsFasta(scanner *bufio.Scanner) []int {
 				currLen = 0
 			}
 		} else {
-			currLen += len(strings.TrimSuffix(line[1:], "\n"))
+			currLen += len(strings.TrimSuffix(line, "\n"))
 		}
 		lineNo++
+	}
+	// Do count the last item as well
+	if currLen > 0 {
+		lengths = append(lengths, currLen)
 	}
 	checkMsg(scanner.Err(), "Error scanning text")
 	fmt.Println("Sorting lengths ...")
