@@ -1,7 +1,8 @@
 FastXViz
 ========
 
-Plot read length distribution from FastQ files, in .pdf or .png format.
+Plot read length distribution from FASTA or FastQ files, in .pdf or .png
+format.
 
 ## Install
 
