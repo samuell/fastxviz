@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	inPath := flag.String("in", "", "Input file in FastQ format")
+	inPath := flag.String("in", "", "Input file in FASTA or FastQ format")
 	plotType := flag.String("type", "png", "Decide plot type, between: png, pdf and cli")
 	plotPath := flag.String("out", "", "Output plot file in .pdf or .png format (depending on file extension). If not specified, it will be the input path, with .png appended.")
 	flag.Parse()
@@ -39,20 +39,14 @@ func main() {
 		scanner = bufio.NewScanner(file)
 	}
 
-	// Compute length of lines
-	fmt.Println("Computing lengths of reads ...")
-	lengths := []int{}
-	lineNo := 1
-	for scanner.Scan() {
-		line := scanner.Text()
-		if lineNo%4 == 2 {
-			lengths = append(lengths, len(line))
-		}
-		lineNo++
+	basePath := strings.Replace(*inPath, ".gz", "", 1)
+
+	var lengths []int
+	if strings.HasSuffix(basePath, ".fastq") || strings.HasSuffix(basePath, ".fq") {
+		lengths = readLengthsFastQ(scanner)
+	} else if strings.HasSuffix(basePath, ".fasta") || strings.HasSuffix(basePath, ".fa") {
+		lengths = readLengthsFasta(scanner)
 	}
-	checkMsg(scanner.Err(), "Error scanning text")
-	fmt.Println("Sorting lengths ...")
-	sort.Ints(lengths)
 
 	if *plotType == "cli" {
 		for i, length := range lengths {
@@ -70,6 +64,48 @@ func main() {
 		fmt.Println("Plotting ...")
 		plotLengths(lengths, *plotPath)
 	}
+}
+
+func readLengthsFastQ(scanner *bufio.Scanner) []int {
+	// Compute length of lines
+	fmt.Println("Computing lengths of reads from FastQ file ...")
+	lengths := []int{}
+	lineNo := 1
+	for scanner.Scan() {
+		line := scanner.Text()
+		if lineNo%4 == 2 {
+			lengths = append(lengths, len(line))
+		}
+		lineNo++
+	}
+	checkMsg(scanner.Err(), "Error scanning text")
+	fmt.Println("Sorting lengths ...")
+	sort.Ints(lengths)
+	return lengths
+}
+
+func readLengthsFasta(scanner *bufio.Scanner) []int {
+	// Compute length of lines
+	fmt.Println("Computing lengths of reads of Fasta...")
+	lengths := []int{}
+	lineNo := 1
+	currLen := 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, ">") {
+			if currLen > 0 {
+				lengths = append(lengths, currLen)
+				currLen = 0
+			}
+		} else {
+			currLen += len(strings.TrimSuffix(line[1:], "\n"))
+		}
+		lineNo++
+	}
+	checkMsg(scanner.Err(), "Error scanning text")
+	fmt.Println("Sorting lengths ...")
+	sort.Ints(lengths)
+	return lengths
 }
 
 func plotLengths(lengths []int, plotPath string) {
@@ -95,7 +131,7 @@ func plotLengths(lengths []int, plotPath string) {
 	p.Add(bars)
 
 	fmt.Println("Saving plot ...")
-	err = p.Save(15*vg.Centimeter, 10*vg.Centimeter, plotPath)
+	err = p.Save(29*vg.Centimeter, 21*vg.Centimeter, plotPath)
 	checkMsg(err, "Could not save plot")
 }
 
