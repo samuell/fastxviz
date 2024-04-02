@@ -15,11 +15,21 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
+const (
+	FASTXVIZ_VERSION = "v0.3.0"
+)
+
 func main() {
 	inPath := flag.String("in", "", "Input file in FASTA or FastQ format")
 	plotType := flag.String("type", "png", "Decide plot type, between: png, pdf and cli")
 	plotPath := flag.String("out", "", "Output plot file in .pdf or .png format (depending on file extension). If not specified, it will be the input path, with .png appended.")
+	printVersion := flag.Bool("version", false, "prints the current version")
 	flag.Parse()
+
+	if *printVersion {
+		fmt.Printf("FastXViz %s\n", FASTXVIZ_VERSION)
+		os.Exit(1)
+	}
 
 	if *inPath == "" || *plotType == "" {
 		fmt.Println("You have to specify an input filename!")
